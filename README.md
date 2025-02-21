@@ -1,10 +1,10 @@
 # SQL Commands Guide
-
+All commands SQL SELECT, INSERT, UPDATE, DELETE 
 ## SELECT (เลือกข้อมูล)
 - เลือกข้อมูลทั้งหมดจากตาราง
   ```sql
   SELECT * FROM Track;
-  SELECT * FROM bak_khonE3;
+  SELECT * FROM bak_khonE3_WAVE;
   ```
 - เลือกเฉพาะบางคอลัมน์
   ```sql
@@ -94,4 +94,4 @@ UPDATE Customer SET Company = 'New Company' WHERE Company IS NULL;
 DELETE FROM Customer WHERE CustomerId = 1;
 DELETE FROM Customer WHERE Company IS NULL;
 DELETE FROM Customer WHERE Company = 'New Company';
-DELETE FROM Customer; -- ลบทั้งหมด (ใช้อย่างระมัดระวัง!)
+DELETE FROM Customer; -- ลบทั้งหมด (ใช้อย่างระมัดระวังเด้อ!)
