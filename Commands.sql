@@ -29,9 +29,10 @@ SELECT * FROM Invoice WHERE Total > 10 AND BillingCountry = 'USA';
 -- BETWEEN
 SELECT * FROM Invoice WHERE Total BETWEEN 2 AND 5;
 SELECT * FROM Invoice WHERE Total >= 2 AND Total <= 5;
--- OR IN
+-- OR
 SELECT * FROM Customer WHERE Country = 'Canada' OR Country = 'USA';
-SELECT * FROM Customer WHERE Country IN ('Canada', 'USA', 'Brazil');
+-- IN
+SELECT * FROM Customer WHERE Country IN ('Canada', 'USA', 'Brazil'); -- เลือกแสดงได้หลายตัว
 SELECT * FROM Customer WHERE Country NOT IN ('Canada', 'USA', 'Brazil');
 -- LIKE
 SELECT * FROM Customer WHERE FirstName LIKE 'A%'; -- % คืออะไรก็ได้
@@ -44,6 +45,7 @@ SELECT * FROM Customer ORDER BY FirstName DESC; -- DESC เรียงมาก
 SELECT * FROM Invoice ORDER BY Total DESC LIMIT 3; -- เรียงข้อมูล TOP 3
 SELECT * FROM Invoice WHERE Invoice.BillingCountry = 'USA' ORDER BY Total DESC LIMIT 10; -- เรียงข้อมูล TOP 10 ของข้อมูล USA
 SELECT * FROM Customer ORDER BY FirstName ASC, LastName ASC;
+
 -- Aggregate Function: https://www.sqlite.org/lang_aggfunc.html
 SELECT MIN(Total) FROM Invoice;
 SELECT MAX(Total) FROM Invoice;
@@ -51,7 +53,7 @@ SELECT SUM(Total) FROM Invoice;
 SELECT AVG(Total) FROM Invoice;
 -- COUNT
 SELECT COUNT(*) FROM Invoice; -- นับชุดข้อมูล
--- GROUP
+-- GROUP ใช้กับ Aggregate
 SELECT COUNT(*), Country FROM Customer GROUP BY Country ORDER BY COUNT(*) ASC; -- เลือกนับกลุ่มชุดข้อมูล,จากน้อยไปมาก
 SELECT COUNT(*), Country FROM Customer GROUP BY Country ORDER BY COUNT(*) DESC; -- เลือกนับกลุ่มชุดข้อมูล,จากมากไปน้อย
 -- HAVING เหมือน WHERE ใช้เฉพาะเงื่อนไขจาก Aggregate Function
