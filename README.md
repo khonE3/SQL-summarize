@@ -95,3 +95,139 @@ DELETE FROM Customer WHERE CustomerId = 1;
 DELETE FROM Customer WHERE Company IS NULL;
 DELETE FROM Customer WHERE Company = 'New Company';
 DELETE FROM Customer; -- ลบทั้งหมด (ใช้อย่างระมัดระวังเด้อ!)
+```
+
+
+
+## สรุป SQL JOIN
+
+
+- [JOIN](#join)
+- [INNER JOIN](#inner-join)
+- [LEFT JOIN](#left-join)
+- [RIGHT JOIN](#right-join)
+- [FULL JOIN](#full-join)
+- [Self JOIN](#self-join)
+
+---
+
+## JOIN
+`JOIN` ใน SQL ใช้สำหรับรวมข้อมูลจากสองตารางหรือมากกว่าโดยอ้างอิงจากคอลัมน์ที่มีความสัมพันธ์กัน
+
+### ไวยากรณ์
+```sql
+SELECT * FROM table1 
+JOIN table2 ON table1.column_name = table2.column_name;
+```
+
+### ประเภทของ JOIN:
+- `INNER JOIN`: แสดงเฉพาะข้อมูลที่มีความสัมพันธ์กันทั้งสองตาราง
+- `LEFT JOIN`: แสดงข้อมูลทั้งหมดจากตารางซ้าย และเฉพาะข้อมูลที่สัมพันธ์กันจากตารางขวา
+- `RIGHT JOIN`: แสดงข้อมูลทั้งหมดจากตารางขวา และเฉพาะข้อมูลที่สัมพันธ์กันจากตารางซ้าย
+- `FULL JOIN`: แสดงข้อมูลทั้งหมดจากทั้งสองตาราง
+
+```sql
+SELECT * FROM table1 INNER JOIN table2 ON table1.column_name = table2.column_name;
+SELECT * FROM table1 LEFT JOIN table2 ON table1.column_name = table2.column_name;
+SELECT * FROM table1 RIGHT JOIN table2 ON table1.column_name = table2.column_name;
+SELECT * FROM table1 FULL JOIN table2 ON table1.column_name = table2.column_name;
+```
+
+---
+
+## INNER JOIN
+`INNER JOIN` ใช้เพื่อเลือกข้อมูลที่มีค่าตรงกันจากทั้งสองตารางเท่านั้น
+
+### ตัวอย่าง:
+```sql
+SELECT c.CustomerId, c.FirstName, c.LastName, i.InvoiceId, i.Total
+FROM Customer AS c 
+INNER JOIN Invoice AS i ON c.CustomerId = i.CustomerId 
+WHERE c.Country = 'USA'
+ORDER BY c.CustomerId DESC;
+```
+
+### INNER JOIN กับการใช้ฟังก์ชัน Aggregate:
+```sql
+SELECT c.CustomerId, c.FirstName, c.LastName, AVG(i.Total) AS AverageInvoice, COUNT(i.Total) AS InvoiceCount
+FROM Customer AS c
+INNER JOIN Invoice AS i USING (CustomerId)
+GROUP BY c.CustomerId
+HAVING AVG(i.Total) > 5.5
+ORDER BY c.CustomerId DESC;
+```
+
+---
+
+## LEFT JOIN
+`LEFT JOIN` ใช้เพื่อดึงข้อมูลทั้งหมดจากตารางซ้าย และเฉพาะข้อมูลที่ตรงกันจากตารางขวา ถ้าไม่มีข้อมูลที่ตรงกัน จะคืนค่า `NULL`
+
+### ตัวอย่าง:
+```sql
+SELECT ar.ArtistId, ar.Name AS ArtistName, al.Title AS AlbumTitle
+FROM Artist ar
+LEFT JOIN Album al ON ar.ArtistId = al.ArtistId
+WHERE ar.ArtistId = 1;
+```
+
+### LEFT JOIN กับ Customer และ Invoice:
+```sql
+SELECT c.CustomerId, c.FirstName || ' ' || c.LastName AS CustomerName, i.InvoiceId, i.Total AS InvoiceTotal
+FROM Customer AS c
+LEFT JOIN Invoice AS i ON c.CustomerId = i.CustomerId;
+```
+
+---
+
+## RIGHT JOIN
+`RIGHT JOIN` ใช้เพื่อดึงข้อมูลทั้งหมดจากตารางขวา และเฉพาะข้อมูลที่ตรงกันจากตารางซ้าย ถ้าไม่มีข้อมูลที่ตรงกัน จะคืนค่า `NULL`
+
+### ตัวอย่าง:
+```sql
+SELECT c.CustomerId, c.FirstName || ' ' || c.LastName AS CustomerName, i.InvoiceId, i.Total AS InvoiceTotal
+FROM Customer AS c
+RIGHT JOIN Invoice AS i ON c.CustomerId = i.CustomerId;
+```
+
+---
+
+## FULL JOIN
+`FULL JOIN` ใช้เพื่อดึงข้อมูลทั้งหมดจากทั้งสองตาราง หากไม่มีค่าที่ตรงกัน ระบบจะเติมค่า `NULL`
+
+### ตัวอย่าง:
+```sql
+SELECT c.CustomerId, c.FirstName || ' ' || c.LastName AS CustomerName, i.InvoiceId, i.Total AS InvoiceTotal
+FROM Customer AS c
+FULL JOIN Invoice AS i ON c.CustomerId = i.CustomerId;
+```
+
+---
+
+## Self JOIN
+`Self JOIN` คือการ JOIN ตารางเดียวกัน ใช้สำหรับข้อมูลที่มีลำดับชั้น เช่น ระบบพนักงานและผู้จัดการ
+
+### ตัวอย่าง:
+```sql
+SELECT e.EmployeeId AS EmployeeID,
+       e.FirstName || ' ' || e.LastName AS EmployeeName,
+       e.Title AS EmployeeTitle,
+       m.EmployeeId AS ManagerID,
+       m.FirstName || ' ' || m.LastName AS ManagerName,
+       m.Title AS ManagerTitle
+FROM Employee e
+LEFT JOIN Employee m ON e.ReportsTo = m.EmployeeId
+ORDER BY e.EmployeeId;
+```
+
+---
+
+## สรุป
+✅ `INNER JOIN` ใช้เพื่อดึงข้อมูลที่ตรงกันจากทั้งสองตารางเท่านั้น
+✅ `LEFT JOIN` แสดงข้อมูลทั้งหมดจากตารางซ้ายและข้อมูลที่สัมพันธ์กันจากตารางขวา
+✅ `RIGHT JOIN` แสดงข้อมูลทั้งหมดจากตารางขวาและข้อมูลที่สัมพันธ์กันจากตารางซ้าย
+✅ `FULL JOIN` แสดงข้อมูลทั้งหมดจากทั้งสองตาราง ไม่ว่ามีความสัมพันธ์กันหรือไม่
+✅ `SELF JOIN` ใช้สำหรับข้อมูลที่มีโครงสร้างแบบลำดับชั้น
+✅ `USING` ใช้แทน `ON` ได้ถ้าชื่อคอลัมน์เหมือนกันทั้งสองตาราง
+
+---
+
